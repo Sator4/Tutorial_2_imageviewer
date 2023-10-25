@@ -23,6 +23,19 @@ class MainActivity_2 : ComponentActivity(){
 }
 
 
+private fun checkForDot(equation: String): Boolean {
+    for (i in equation.length-1 downTo 0){
+        if (equation[i] in "+-*/()"){
+            break
+        }
+        if (equation[i] == '.'){
+            return true
+        }
+    }
+    return false
+}
+
+
 
 @Composable
 fun Master(modifier: Modifier = Modifier){
@@ -232,12 +245,9 @@ private fun buttonClick(equation: String, symbol: String): String {
     if (symbol == "="){
         return computeEquation(equation)
     }
-    if (symbol in "+-*/" && (equation == "" || equation.last() !in "123456879)")){
+    if (symbol in "+-*/" && (equation == "" || equation.last() !in "0123456879)")){
         return equation
     }
-//    if (symbol == ")"){
-//        return (equation.count{it == '('} >= equation.count{it == ')'}).toString()
-//    }
     if (symbol == ")" && equation.count{it == '('} <= equation.count{it == ')'}){
         return equation
     }
@@ -248,10 +258,11 @@ private fun buttonClick(equation: String, symbol: String): String {
         if (equation == "" || equation == "0"){
             return "0."
         }
-        if (equation.contains(".")){
+        if (checkForDot(equation)){
             return equation
         }
     }
+
 
     return equation + symbol
 }
@@ -316,7 +327,7 @@ private fun computeEquation(equation: String) : String{
         val operation = equationArray[priorityArray[max_priority_index].second]
         val operand_1 = equationArray[operand_1_index].toDouble()
         val operand_2 = equationArray[operand_2_index].toDouble()
-        var result: Double = 0.0
+        var result = 0.0
         if (operation == "+"){
             result = operand_1 + operand_2
         } else if (operation == "-"){
@@ -334,40 +345,3 @@ private fun computeEquation(equation: String) : String{
 
     return equationArray[priorityArray[0].second]
 }
-
-
-
-
-//private suspend fun write(context: Context, text: String){
-//    withContext(Dispatchers.IO){
-//        context.openFileOutput("test.txt", Context.MODE_PRIVATE).use {
-//            it.write(text.toByteArray())
-//        }
-//    }
-//}
-//
-//
-//private suspend fun read(context: Context) = withContext(Dispatchers.IO){
-//    try {
-//        context.openFileInput("test.txt").bufferedReader().useLines { lines ->
-//            lines.fold(""){ acc, s ->
-//                "$acc\n$s"
-//            }
-//        }
-//    } catch (e: IOException){
-//        e.printStackTrace()
-//        ""
-//    }
-//}
-//
-//
-//@Composable
-//fun NotesList(modifier: Modifier = Modifier){
-//
-//}
-//
-//@Composable
-//fun NotePreview(modifier: Modifier = Modifier){
-//
-//}
-
